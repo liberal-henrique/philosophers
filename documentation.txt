@@ -1,0 +1,107 @@
+Philosophers
+	Vamos compilar um apanhado de conteudos para o desenvolvimento
+desse projeto de maneira rapida e produtiva.
+
+Intrucoes do subject:
+- The philosophers alternatively eat, think, or sleep.
+- There are as many forks as philosophers.
+- Because serving and eating spaghetti with only one fork is very inconvenient, a
+philosopher takes their right and their left forks to eat, one in each hand.
+- Your program should take the following arguments:
+number_of_philosophers time_to_die time_to_eat time_to_sleep
+[number_of_times_each_philosopher_must_eat]
+- To prevent philosophers from duplicating forks, you should protect the forks state
+with a mutex for each of them.
+
+
+What are mutex?
+	In C, a mutex (short for mutual exclusion) is a synchronization primitive
+used to protect shared resources from concurrent access by multiple threads.
+It provides a way to enforce mutual exclusion, ensuring that only one thread
+can access the protected resource at a time.
+
+	A mutex has two states: locked and unlocked. When a thread wants to access
+a shared resource, it must first acquire the mutex lock. If the lock is
+currently held by another thread, the requesting thread will be blocked
+(put to sleep) until the lock becomes available. Once a thread has finished
+using the shared resource, it releases the mutex, allowing other threads to
+acquire the lock.
+
+The functions that we can use:
+
+gettimeofday: The gettimeofday function retrieves the current time and stores
+it in a struct timeval. It takes two arguments: a pointer to the struct timeval
+and an optional timezone parameter. It provides a high-resolution timestamp
+that can be used for various timing-related operations.
+
+pthread_create: It is used to create a new thread within a program. It takes four
+arguments: a pointer to the thread identifier, thread attributes (or NULL
+for default attributes), the function to be executed by the new thread, and an
+optional argument to pass to the thread function.
+
+pthread_join: is used to wait for a thread to terminate and obtain
+its exit status. It takes two arguments: the thread identifier and a pointer to a
+location where the exit status will be stored. The calling thread will be blocked
+until the specified thread terminates.
+
+pthread_mutex_init: is used to initialize a mutex (mutex stands
+for mutual exclusion). It takes two arguments: a pointer to the mutex object to
+initialize and an optional set of attributes (or NULL for default attributes). The
+function initializes the mutex in an unlocked state.
+
+pthread_mutex_destroy: is used to destroy a mutex
+object that was previously initialized using pthread_mutex_init. It releases any
+resources associated with the mutex.
+
+pthread_mutex_lock: is used to acquire a lock on a mutex. If the
+mutex is currently locked by another thread, the calling thread will be blocked until
+the mutex becomes available.  Once the lock is acquired, the thread can safely access
+the protected resource.
+
+pthread_mutex_unlock: is used to release the
+lock on a mutex. It allows other threads to acquire the mutex and access the
+protected resource.
+
+
+
+Estava a assistir um video do vault sobre threads
+
+Em conversa com o Ezequiel para hoje vale a pena
+criar a lista de filosofos e limpar essa lista.
+Usar o init do mutex e o destroy dentro de cada um.
+Tudo isso deve estar a funcionar sem leaks.
+
+
+1000 - 900 < 400
+agora - ultima_refeicao < tempo_morte
+agora - ultima_refeicao - tempo_morte < 0
+
+
+	Em conversa com o Rubens foi-me dito que o mutex servira para trancar a variavel
+quando formos acessa-la para a alteracao do seu valor. Portanto, os talheres
+terao um mutex e um boolean para quando formos acessar o Boolean apenas alteremos
+o mutex para lock. Dessa forma, faremos a alteracao e depois faremos o unlock e, assim,
+nao havera data race. Importante perceber que nao estamos fazendo mutex para lock o acesso
+a variaveis.
+	Tudo que for compartilhado entre todos deve ir para a table. Exemplo o tempo de morte
+que deve ser o mesmo para todo mundo.
+	Temos de alternar o acesso aos talheres. Os pares comecarao comendo, pois eles irao pegar o talher
+dos impares. Os impares tentaram pegar o proprio talher e alguns nao conseguiram outras sim. Os que conseguiram
+serao os primeiros a comer, os que nao, irao comer depois de quem conseguiu.
+	Ele criou a metafora do quarto. A variavel sera comparada a um quarto. Assim, quando
+quisermos alterar o conteudo, entraremos pela porta e a trancaremos. Depois disso, alteramos
+o que quiser alterar e depois  destrancamos e saimos. Isso sera usado para tudo que for aces-
+sado por mais de um componente.
+	Discutimos, tambem, sobre a importancia e alguns metodos de organizacao de codigo. Ele
+demonstrou que a main pode contar "um narrativa" de como todo o programa se comportara.
+
+
+
+	Eu ja tenho a lista de filosofos e cada um ja esta com seu talher.
+	Ja percebi como realizar o lock e unlock desses talheres.
+	Criei um mutex para cada um dos topicos que aparentemente serao
+partilhados com os demais elementos do programa.
+
+	- Precisarei criar a pthread de cada filosofo.
+
+
