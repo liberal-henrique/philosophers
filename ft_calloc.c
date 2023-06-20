@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:58:06 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/17 12:50:08 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/19 16:11:23 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,13 @@ void	*malloc_ob(size_t length)
 		element++;
 	}
 	return (tmp);
+}
+
+int	put_nbr(int num)
+{
+	char	s[10] = "0123456789";
+
+	if (num > 9)
+		put_nbr(num / 10);
+	return (write(1, &s[num % 10], 1));
 }

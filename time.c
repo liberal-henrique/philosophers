@@ -6,13 +6,13 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:49:49 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/17 12:50:11 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/20 13:04:06 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-unsigned long	get_time(void)
+t_ulong	get_time(void)
 {
 	struct timeval	time;
 
@@ -20,14 +20,21 @@ unsigned long	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	ft_usleep(int milisecs)
+t_ulong	get_program_time(void)
 {
-	unsigned long	end;
+	return (get_time() - table()->start_time);
+}
+
+void	ft_usleep(t_philos *philo, int milisecs)
+{
+	t_ulong	end;
 
 	end = get_time() + milisecs;
 	while (get_time() < end)
 	{
-		usleep(10);
+		if (!check_alive(philo))
+			kill_philo(philo);
+		usleep(200); // think about too many
 	}
 }
 

@@ -104,4 +104,14 @@ partilhados com os demais elementos do programa.
 
 	- Precisarei criar a pthread de cada filosofo.
 
+Pegar o talher
+Alterar o mutex para locked
+
+Apenas um talher
+
+
+Comer
+Um filosofo estar comendo eh ele ter acesso a dois talheres pelo tempo determinado.
+
+
 

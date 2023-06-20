@@ -6,23 +6,25 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:53:18 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/17 15:46:39 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/20 13:02:07 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-void	print_list(t_philos *list)
+void	*start_routine(t_philos	*philo)
 {
-	while (list)
+	philo->last_action = get_time();
+	while (1)
 	{
-		printf("[%i", list->id);
-		printf("]--->");
-		list = list->next;
-		if (list == table()->begin)
-			break ;
+		eating(philo);
+		if (!philo->thinking)
+		{
+			philo->thinking = 1;
+			msg(philo, THINK);
+		}
 	}
-	printf("\n");
+	return (philo);
 }
 
 void	init_routine(t_philos *list)
@@ -30,12 +32,21 @@ void	init_routine(t_philos *list)
 	t_philos	*tmp;
 
 	tmp = list;
+	table()->start_time = get_time();
 	while (tmp)
 	{
+		pthread_create(&tmp->thread, NULL, (void *)start_routine, tmp);
+		tmp = tmp->next;
 		if (table()->begin == tmp)
 			break ;
-		pthread_create(&tmp->thread, NULL, NULL, NULL);
+	}
+	tmp = list;
+	while (tmp)
+	{
+		pthread_join(tmp->thread, NULL);
 		tmp = tmp->next;
+		if (table()->begin == tmp)
+			break ;
 	}
 }
 
@@ -45,9 +56,8 @@ t_philos	*create_philo(int i)
 
 	new = malloc_ob(sizeof(t_philos));
 	new->id = i;
-	new->last_meal = 0;
-	new->fork.fork = true;
-	pthread_mutex_init(&new->fork.mutex, NULL);
+	new->utensils.fork = true;
+	pthread_mutex_init(&new->utensils.mutex, NULL);
 	pthread_mutex_init(&new->mutex_meal, NULL);
 	pthread_mutex_init(&new->mutex_life, NULL);
 	new->next = NULL;
@@ -65,7 +75,7 @@ void	destroy_philos_list(t_philos *list)
 		tmp = list->next;
 		if (tmp == stop)
 			break ;
-		pthread_mutex_destroy(&list->fork.mutex);
+		pthread_mutex_destroy(&list->utensils.mutex);
 		pthread_mutex_destroy(&list->mutex_meal);
 		pthread_mutex_destroy(&list->mutex_life);
 		free(list);

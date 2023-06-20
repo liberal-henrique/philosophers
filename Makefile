@@ -1,6 +1,6 @@
-# CC			=	cc -fsanitize=address
-CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -g
+CC			=	cc -fsanitize=thread
+# CC			=	cc
+CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
 INCLUDES	=	./includes
 RM			=	/bin/rm -f
@@ -9,6 +9,8 @@ NAME		=	philo
 SRCS		=	main.c \
 				util.c \
 				philo.c \
+				actions.c \
+				routine.c \
 				initialize.c \
 				ft_calloc.c \
 				time.c \
@@ -33,8 +35,8 @@ norm :
 
 a:
 	make re && clear
-
+#  --thread-locks=yes --thread-safety=:<high> --fair-sched=yes --track-origins=yes
 v:
-	make re && clear && valgrind ./philo 5 100 100 100
+	make re && clear && valgrind -s --tool=helgrind --history-level=approx ./philo 5 100 100 100
 
 .PHONY: all re clean fclean m
