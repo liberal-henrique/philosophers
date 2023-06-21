@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:53:07 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/21 10:48:55 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 13:49:47 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_philos	*create_philo(int i)
 	new = ft_calloc(sizeof(t_philos));
 	new->id = i;
 	new->utensils.fork = true;
+	new->alive = true;
 	pthread_mutex_init(&new->utensils.mutex, NULL);
 	pthread_mutex_init(&new->mutex_meal, NULL);
 	pthread_mutex_init(&new->mutex_life, NULL);

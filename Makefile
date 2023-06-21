@@ -1,5 +1,5 @@
 CC			=	cc -fsanitize=thread
-# CC			=	cc
+# CC		=	cc
 CFLAGS		=	-Wall -Wextra -Werror -pthread -g
 
 INCLUDES	=	./includes
@@ -9,6 +9,7 @@ NAME		=	philo
 SRCS		=	main.c \
 				util.c \
 				philo.c \
+				check.c \
 				actions.c \
 				routine.c \
 				initialize.c \

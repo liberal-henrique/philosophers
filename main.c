@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 15:38:22 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/21 10:35:31 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 16:09:32 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	main(int ac, char **av)
 		table()->full = ft_atoi(av[5]);
 	else
 		table()->full = INT_MAX;
-	philo_list(ft_atoi(av[1]));
+	table()->n_philos = ft_atoi(av[1]);
+	philo_list(table()->n_philos);
 	init_routine(table()->begin);
 	destroy_philos_list(table()->begin);
 	return (0);
