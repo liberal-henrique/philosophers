@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:49:49 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/20 13:04:06 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 10:50:06 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	ft_usleep(t_philos *philo, int milisecs)
 	{
 		if (!check_alive(philo))
 			kill_philo(philo);
-		usleep(200); // think about too many
+		usleep(200);
 	}
 }
-

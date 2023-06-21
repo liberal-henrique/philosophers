@@ -6,30 +6,31 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 10:53:07 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/20 12:32:27 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 10:48:55 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-bool	kill_philo(t_philos *philo)
+t_table	*table(void)
 {
-	pthread_mutex_lock(&philo->mutex_life);
-	philo->alive = false;
-	pthread_mutex_unlock(&philo->mutex_life);
-	return (philo->alive);
+	static t_table	table;
+
+	return (&table);
 }
 
-bool	check_alive(t_philos *philo)
+t_philos	*create_philo(int i)
 {
-	pthread_mutex_lock(&philo->mutex_life);
-	if (philo->alive)
-	{
-		pthread_mutex_unlock(&philo->mutex_life);
-		return (true);
-	}
-	pthread_mutex_unlock(&philo->mutex_life);
-	return (false);
+	t_philos	*new;
+
+	new = ft_calloc(sizeof(t_philos));
+	new->id = i;
+	new->utensils.fork = true;
+	pthread_mutex_init(&new->utensils.mutex, NULL);
+	pthread_mutex_init(&new->mutex_meal, NULL);
+	pthread_mutex_init(&new->mutex_life, NULL);
+	new->next = NULL;
+	return (new);
 }
 
 t_philos	*philo_list(int num)
@@ -53,17 +54,4 @@ t_philos	*philo_list(int num)
 	if (philo_end && philo_end != table()->begin)
 		philo_end->next = table()->begin;
 	return (table()->begin);
-}
-
-void	print_list(t_philos *list)
-{
-	while (list)
-	{
-		printf("[%i", list->id);
-		printf("]--->");
-		list = list->next;
-		if (list == table()->begin)
-			break ;
-	}
-	printf("\n");
 }

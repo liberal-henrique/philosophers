@@ -6,18 +6,11 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 15:47:46 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/17 12:50:22 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 10:47:15 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
-
-t_table	*table(void)
-{
-	static t_table	table;
-
-	return (&table);
-}
 
 int	is_space(char c)
 {
@@ -61,4 +54,27 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (res * sign);
+}
+
+void	msg(t_philos *philo, int code, t_ulong time)
+{
+	if (code == EAT)
+		printf("%.5lu %i is eating\n", time, philo->id);
+	else if (code == THINK)
+		printf("%.5lu %i is thinking\n", time, philo->id);
+	else if (code == SLEEP)
+		printf("%.5lu %i is sleeping\n", time, philo->id);
+	else if (code == FORK)
+		printf("%.5lu %i has taken a fork\n", time, philo->id);
+}
+
+void	message(t_philos *philo, int code)
+{
+	t_ulong	time;
+
+	time = get_time() - table()->start_time;
+	philo->last_action = get_time();
+	msg(philo, code, time);
+	if (table()->times[code] > 0)
+		ft_usleep(philo, table()->times[code]);
 }

@@ -6,21 +6,11 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 18:25:32 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/20 13:02:28 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 11:04:16 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
-
-bool	take_forks(t_philos *philo)
-{
-	if (philo->id % 2 == 0)
-	{
-		return (take_fork(philo, &philo->next->utensils, \
-		&philo->utensils));
-	}
-	return (take_fork(philo, &philo->utensils, &philo->next->utensils));
-}
 
 void	give_fork(t_fork *first, t_fork *second)
 {
@@ -38,12 +28,44 @@ void	eating(t_philos	*philo)
 	{
 		philo->thinking = 0;
 		philo->last_meal = get_time() + table()->times[DEAD];
-		msg(philo, EAT);
+		message(philo, EAT);
 		if (philo->id % 2 == 0)
 			give_fork(&philo->next->utensils, &philo->utensils);
 		else
 			give_fork(&philo->utensils, &philo->next->utensils);
-		msg(philo, SLEEP);
-		msg(philo, THINK);
+		message(philo, SLEEP);
+		message(philo, THINK);
 	}
+}
+
+bool	kill_philo(t_philos *philo)
+{
+	pthread_mutex_lock(&philo->mutex_life);
+	philo->alive = false;
+	pthread_mutex_unlock(&philo->mutex_life);
+	return (philo->alive);
+}
+
+bool	check_alive(t_philos *philo)
+{
+	pthread_mutex_lock(&philo->mutex_life);
+	if (philo->alive)
+	{
+		pthread_mutex_unlock(&philo->mutex_life);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->mutex_life);
+	return (false);
+}
+
+bool	check_hunger(t_philos *philo)
+{
+	pthread_mutex_lock(&philo->mutex_meal);
+	if (get_time() - philo->last_meal - table()->times[DEAD] <= 0)
+	{
+		philo->alive = false;
+		return (false);
+	}
+	pthread_mutex_unlock(&philo->mutex_meal);
+	return (true);
 }

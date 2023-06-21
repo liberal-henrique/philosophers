@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:53:18 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/20 13:02:07 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 11:07:58 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,30 @@ void	*start_routine(t_philos	*philo)
 		if (!philo->thinking)
 		{
 			philo->thinking = 1;
-			msg(philo, THINK);
+			message(philo, THINK);
 		}
 	}
 	return (philo);
 }
+
+// void	supervision(t_philos *philo)
+// {
+// 	t_philos	*tmp;
+
+// 	tmp = philo;
+// 	while (1)
+// 	{
+// 		if (!check_hunger)
+// 			kill_philo(philo);
+// 		tmp = tmp->next;
+// 	}
+// }
+
+// void	init_table(t_philos *philo)
+// {
+// 	pthread_create(&table()->thread, NULL, (void *) supervision, philo);
+// 	pthread_join(table()->thread, NULL);
+// }
 
 void	init_routine(t_philos *list)
 {
@@ -48,20 +67,6 @@ void	init_routine(t_philos *list)
 		if (table()->begin == tmp)
 			break ;
 	}
-}
-
-t_philos	*create_philo(int i)
-{
-	t_philos	*new;
-
-	new = malloc_ob(sizeof(t_philos));
-	new->id = i;
-	new->utensils.fork = true;
-	pthread_mutex_init(&new->utensils.mutex, NULL);
-	pthread_mutex_init(&new->mutex_meal, NULL);
-	pthread_mutex_init(&new->mutex_life, NULL);
-	new->next = NULL;
-	return (new);
 }
 
 void	destroy_philos_list(t_philos *list)

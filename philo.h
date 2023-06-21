@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 12:03:18 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/20 12:57:36 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/21 11:04:48 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include<sys/time.h>
 # include<unistd.h>
 # include<stdio.h>
+# include<limits.h>
 # include<stdlib.h>
 # include<stdbool.h>
 # include<pthread.h>
@@ -57,8 +58,8 @@ struct s_philos
 struct	s_table
 {
 	t_ulong			start_time;
-	t_ulong			death_time;
-	t_ulong			sleep_time;
+	int				full;
+	pthread_t		thread;
 	t_ulong			times[5];
 	t_philos		*begin;
 };
@@ -79,7 +80,8 @@ void				destroy_philos_list(t_philos *list);
 void				give_fork(t_fork *first, t_fork *second);
 bool				take_fork(t_philos *philo, t_fork *first, t_fork *second);
 bool				take_forks(t_philos *philo);
-void				msg(t_philos *philo, int code);
+void				msg(t_philos *philo, int code, t_ulong time);
+void				message(t_philos *philo, int code);
 void				eating(t_philos	*philo);
 
 //---------util----------------//
@@ -89,7 +91,7 @@ int					check_input(int ac, char **input);
 int					ft_atoi(const char *str);
 
 //---------ft_calloc----------//
-void				*malloc_ob(size_t length);
+void				*ft_calloc(size_t length);
 int					put_nbr(int num);
 
 //---------time----------------//
@@ -97,5 +99,7 @@ t_ulong				get_time(void);
 void				ft_usleep(t_philos	*philo, int milisecs);
 t_ulong				get_program_time(void);
 
+//--------actions--------------//
+bool				check_hunger(t_philos *philo);
 
 #endif
