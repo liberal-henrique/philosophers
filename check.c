@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 13:10:52 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/21 15:58:27 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/23 14:20:45 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,31 +23,16 @@ int	check_input(int ac, char **input)
 	else if (ft_atoi(input[4]) < 0)
 		return (1 - write(2, "not enough time to sleep\n", 25));
 	else if (ac < 5)
-		return (1 - write(2, "You should inform: number of philosophers, \
-		time to die, time to eat, time to sleep\n", 83));
+		return (1 - write(2, \
+	"You should inform: philosophers, time_die, time_eat, time_sleep\n", 65));
 	return (0);
-}
-
-bool	check_alive(t_philos *philo)
-{
-	pthread_mutex_lock(&philo->mutex_life);
-	if (philo->alive)
-	{
-		pthread_mutex_unlock(&philo->mutex_life);
-		return (true);
-	}
-	pthread_mutex_unlock(&philo->mutex_life);
-	return (false);
 }
 
 bool	check_hunger(t_philos *philo)
 {
 	pthread_mutex_lock(&philo->mutex_meal);
-	if (get_time() - philo->last_meal < table()->times[DEAD])
+	if (get_time() - philo->last_meal > table()->times[DEAD])
 	{
-		pthread_mutex_lock(&philo->mutex_life);
-		philo->alive = false;
-		pthread_mutex_unlock(&philo->mutex_life);
 		pthread_mutex_unlock(&philo->mutex_meal);
 		return (false);
 	}

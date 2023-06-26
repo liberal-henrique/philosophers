@@ -6,14 +6,11 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 15:38:22 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/21 16:09:32 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/23 16:01:17 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
-
-// number_of_philosophers time_to_die time_to_eat time_to_sleep
-// [number_of_times_each_philosopher_must_eat]
 
 int	main(int ac, char **av)
 {
@@ -27,7 +24,7 @@ int	main(int ac, char **av)
 	else
 		table()->full = INT_MAX;
 	table()->n_philos = ft_atoi(av[1]);
-	philo_list(table()->n_philos);
+	table()->begin = philo_list(table()->n_philos);
 	init_routine(table()->begin);
 	destroy_philos_list(table()->begin);
 	return (0);

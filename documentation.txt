@@ -14,55 +14,6 @@ number_of_philosophers time_to_die time_to_eat time_to_sleep
 with a mutex for each of them.
 
 
-What are mutex?
-	In C, a mutex (short for mutual exclusion) is a synchronization primitive
-used to protect shared resources from concurrent access by multiple threads.
-It provides a way to enforce mutual exclusion, ensuring that only one thread
-can access the protected resource at a time.
-
-	A mutex has two states: locked and unlocked. When a thread wants to access
-a shared resource, it must first acquire the mutex lock. If the lock is
-currently held by another thread, the requesting thread will be blocked
-(put to sleep) until the lock becomes available. Once a thread has finished
-using the shared resource, it releases the mutex, allowing other threads to
-acquire the lock.
-
-The functions that we can use:
-
-gettimeofday: The gettimeofday function retrieves the current time and stores
-it in a struct timeval. It takes two arguments: a pointer to the struct timeval
-and an optional timezone parameter. It provides a high-resolution timestamp
-that can be used for various timing-related operations.
-
-pthread_create: It is used to create a new thread within a program. It takes four
-arguments: a pointer to the thread identifier, thread attributes (or NULL
-for default attributes), the function to be executed by the new thread, and an
-optional argument to pass to the thread function.
-
-pthread_join: is used to wait for a thread to terminate and obtain
-its exit status. It takes two arguments: the thread identifier and a pointer to a
-location where the exit status will be stored. The calling thread will be blocked
-until the specified thread terminates.
-
-pthread_mutex_init: is used to initialize a mutex (mutex stands
-for mutual exclusion). It takes two arguments: a pointer to the mutex object to
-initialize and an optional set of attributes (or NULL for default attributes). The
-function initializes the mutex in an unlocked state.
-
-pthread_mutex_destroy: is used to destroy a mutex
-object that was previously initialized using pthread_mutex_init. It releases any
-resources associated with the mutex.
-
-pthread_mutex_lock: is used to acquire a lock on a mutex. If the
-mutex is currently locked by another thread, the calling thread will be blocked until
-the mutex becomes available.  Once the lock is acquired, the thread can safely access
-the protected resource.
-
-pthread_mutex_unlock: is used to release the
-lock on a mutex. It allows other threads to acquire the mutex and access the
-protected resource.
-
-
 
 Estava a assistir um video do vault sobre threads
 
@@ -112,6 +63,50 @@ Apenas um talher
 
 Comer
 Um filosofo estar comendo eh ele ter acesso a dois talheres pelo tempo determinado.
+
+
+Problemas para resolver no Philosophers
+- O ultimo filosofo esta a ficar preso. Ele solta o garfo mas
+nao esta a se movimentar mais
+
+22/06
+TO-DO
+- Testar mais para perceber se onde sao os corners cases
+- Pares, impares, solitarios, sanityzer, valgrind e depois o de 200
+- Perceber pq o de 1 nao da free();
+- Sera que todo mundo da free()
+
+Diagnostic
+- Ao correr o programa com o valgrind com 1 philo ele esta a demorar
+como eh esperado e mas depois retorna todos os frees. Nao sei se essa
+demora deveria ser tao grande. Em comparacao a outros trabalhos, isso esta
+errado.
+
+- Correr o programa sem valgrind e perceber o comportamento.
+
+./philo 2 450 200 200
+--> Os philos se encadearam corretamente, porem a acao de pensar ficou
+confinada a um instante.
+
+./philo 4 410 200 200
+--> O philo 3 ja entrou morto. No instante 00000 ele indicou que estava morto.
+Para resolver isso coloquei um ft_usleep(50) antes de iniciar o supervisor(table), pois
+acredito que ele estivesse a checar tudo cedo demais.
+
+./philo 5 800 200 200
+--> A organizacao das threads nao esta a correr da forma devida, tendo em vista que estao
+a morrer sem o desafios.
+Pq o philo esta a ficar 400 sem comer?
+Eu acredito que eles estivessem a correr aos garfos demasiado rapido. Portanto, forcei
+um usleep(50) para que eles deixassem a aplicacao correr de forma mais fluida.
+
+./philo 5 800 200 200 7
+--> Os philos nao estao a quantidade de vezes suficiente. Isso esta a correr pq alguns
+philos estao a morrer quando nao deveriam.
+
+
+
+Problemas com Philosophers
 
 
 

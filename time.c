@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:49:49 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/21 17:03:35 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/23 14:05:30 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,20 @@ t_ulong	get_program_time(void)
 	return (get_time() - table()->start_time);
 }
 
-void	ft_usleep(t_philos *philo, int milisecs)
+void	ft_usleep(int time)
 {
 	t_ulong	end;
 
-	end = get_time() + milisecs;
+	end = get_time() + time;
 	while (get_time() < end)
 	{
-		if (!check_alive(philo))
-		{
-			pthread_mutex_lock(&table()->print);
-			table()->printing = false;
-			pthread_mutex_unlock(&table()->print);
-			kill_philo(philo);
-		}
 		usleep(200);
 	}
+}
+
+bool	calc_time_meal(t_philos *philo)
+{
+	if (get_time() - philo->last_meal <= 2 * table()->times[EAT])
+		return (true);
+	return (false);
 }
