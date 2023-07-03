@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/14 12:03:18 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/23 15:33:59 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/30 10:58:16 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@
 # define THINK		2
 # define SLEEP		3
 # define FORK		4
+# define FULL		5
+# define ALIVE		6
 
-# define H printf("Here\n");
+// # define H printf("Here\n");
 
 typedef unsigned long	t_ulong;
 typedef pthread_mutex_t	t_phmutex;
@@ -46,24 +48,24 @@ struct s_philos
 {
 	int				id;
 	int				n_meals;
-	bool			alive;
+	int				alive;
 	bool			thinking;
-	pthread_t		thread;
+	int				status;
 	t_ulong			last_action;
 	t_ulong			last_meal;
-	t_phmutex		mutex_life;
-	t_phmutex		mutex_meal;
 	t_fork			utensils;
+	t_phmutex		mutex_life;
+	pthread_t		thread;
 	t_philos		*next;
 };
 
 struct	s_table
 {
 	int				full;
-	int				n_philos;
-	t_phmutex		print;
-	bool			printing;
+	int				n;
+	int				count_meal;
 	t_ulong			start_time;
+	t_phmutex		print;
 	pthread_t		thread;
 	t_ulong			times[5];
 	t_philos		*begin;
@@ -84,32 +86,36 @@ void				init_table(t_philos *philo);
 void				start_join(t_philos *philo);
 
 //---------routine-----------//
-bool				take_fork(t_philos *philo, t_fork *first, t_fork *second);
-bool				take_forks(t_philos *philo);
+bool				choose_fork(t_philos *philo);
+bool				take_fork(t_philos *philo, t_fork *first);
+bool				return_fork(t_philos *philo);
+bool				give_fork(t_fork *first, t_fork *second);
 
 //--------check-----------------//
+int					check_num(char **input);
 int					check_input(int ac, char **input);
 bool				check_hunger(t_philos *philo);
-bool				check_printable(void);
+bool				check_alive(t_philos *philo);
+void				set_all(t_philos *philo, int status);
 
 //---------util----------------//
 int					is_space(char c);
 int					ft_atoi(const char *str);
-void				msg(t_philos *philo, int code, t_ulong time);
+void				msg(t_philos *philo, int code);
 void				message(t_philos *philo, int code);
+int					ft_is_num(char c);
 
 //---------ft_calloc----------//
 void				*ft_calloc(size_t length);
 int					put_nbr(int num);
 
 //---------time----------------//
-void				ft_usleep(int time);
+void				ft_usleep(t_philos *philo, int time);
 t_ulong				get_time(void);
-t_ulong				get_program_time(void);
 bool				calc_time_meal(t_philos *philo);
 
 //--------actions--------------//
-void				give_fork(t_fork *first, t_fork *second);
-void				eating_sleeping(t_philos	*philo);
+void				eating(t_philos *philo);
+void				thinking(t_philos *philo);
 
 #endif

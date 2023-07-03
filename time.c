@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:49:49 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/23 14:05:30 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/06/30 11:17:52 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,14 @@ t_ulong	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-t_ulong	get_program_time(void)
-{
-	return (get_time() - table()->start_time);
-}
-
-void	ft_usleep(int time)
+void	ft_usleep(t_philos *philo, int time)
 {
 	t_ulong	end;
 
 	end = get_time() + time;
-	while (get_time() < end)
+	while (get_time() < end && check_alive(philo))
 	{
-		usleep(200);
+		usleep(150);
 	}
 }
 

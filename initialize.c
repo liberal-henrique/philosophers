@@ -6,7 +6,7 @@
 /*   By: lliberal <lliberal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 12:53:18 by lliberal          #+#    #+#             */
-/*   Updated: 2023/06/23 16:28:31 by lliberal         ###   ########.fr       */
+/*   Updated: 2023/07/03 14:06:45 by lliberal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,13 @@
 
 void	start_routine(t_philos	*philo)
 {
-	pthread_mutex_lock(&philo->mutex_meal);
 	philo->last_meal = get_time();
-	pthread_mutex_unlock(&philo->mutex_meal);
-	while (check_printable())
+	if (philo->id % 2)
+		usleep(250);
+	while (check_alive(philo))
 	{
-		if (table()->n_philos != 1 && \
-		!(calc_time_meal(philo) && usleep(200)))
-			eating_sleeping(philo);
-		if (!philo->thinking)
-		{
-			philo->thinking = 1;
-			message(philo, THINK);
-		}
+		eating(philo);
+		message(philo, SLEEP);
 	}
 }
 
@@ -36,9 +30,6 @@ void	init_routine(t_philos *philos)
 
 	tmp = philos;
 	table()->start_time = get_time();
-	pthread_mutex_lock(&table()->print);
-	table()->printing = true;
-	pthread_mutex_unlock(&table()->print);
 	while (tmp)
 	{
 		pthread_create(&tmp->thread, NULL, (void *)start_routine, tmp);
@@ -46,7 +37,6 @@ void	init_routine(t_philos *philos)
 		if (table()->begin == tmp)
 			break ;
 	}
-	usleep(250);
 	init_table(tmp);
 	start_join(philos);
 }
@@ -62,48 +52,27 @@ void	start_join(t_philos *philo)
 	}
 }
 
-int	check_full(t_philos *philo)
-{
-	int			counter;
-	int			loop;
-
-	loop = 0;
-	counter = 0;
-	while (loop <= table()->n_philos)
-	{
-		pthread_mutex_lock(&table()->print);
-		if (philo->n_meals >= table()->full)
-			counter++;
-		pthread_mutex_unlock(&table()->print);
-		philo = philo->next;
-		loop++;
-	}
-	return (counter);
-}
-
 void	supervision(t_philos *philo)
 {
-	t_philos	*tmp;
-	int			n_philos;
+	int	counter_full;
 
-	tmp = philo;
-	n_philos = table()->n_philos;
-	while (check_printable())
+	(void)philo;
+	counter_full = 0;
+	set_all(philo, ALIVE);
+	while (1)
 	{
-		if (!check_hunger(philo))
+		pthread_mutex_lock(&philo->mutex_life);
+		if (philo->alive == DEAD || counter_full == table()->n)
 		{
-			pthread_mutex_lock(&table()->print);
-			table()->printing = false;
-			pthread_mutex_unlock(&table()->print);
-			msg(philo, DEAD, get_program_time());
+			pthread_mutex_unlock(&philo->mutex_life);
+			set_all(philo, DEAD);
+			return ;
 		}
-		if (table()->n_philos != INT_MAX && \
-		check_full(philo) >= table()->n_philos)
-		{
-			pthread_mutex_lock(&table()->print);
-			table()->printing = false;
-			pthread_mutex_unlock(&table()->print);
-		}
+		if (philo->alive == FULL)
+			counter_full++;
+		else if (philo->alive != FULL)
+			counter_full = 0;
+		pthread_mutex_unlock(&philo->mutex_life);
 		philo = philo->next;
 	}
 }
